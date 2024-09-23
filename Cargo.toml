@@ -11,3 +11,5 @@ shuttle-shared-db = { version = "0.47.0", features = ["postgres", "sqlx"] }
 sqlx = "0.7.1"
 tokio = "1.28.2"
 serde = { version = "1.0.210", features = ["derive"] }
+nanoid = "0.4.0"
+url = "2.5.2"
