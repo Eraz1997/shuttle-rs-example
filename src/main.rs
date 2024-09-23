@@ -3,6 +3,7 @@ use axum::extract::Path;
 use axum::routing::post;
 use axum::{routing::get, Extension, Router};
 use serde::{Deserialize, Serialize};
+use shuttle_runtime::CustomError;
 use sqlx::PgPool;
 
 #[derive(Serialize, Deserialize)]
@@ -23,10 +24,10 @@ async fn shorten_url(
 
 #[shuttle_runtime::main]
 async fn main(#[shuttle_shared_db::Postgres] pool: PgPool) -> shuttle_axum::ShuttleAxum {
-    let _ = sqlx::migrate!("migrations/db")
+    sqlx::migrate!("migrations/db")
         .run(&pool)
         .await
-        .unwrap();
+        .map_err(CustomError::new)?;
 
     let router = Router::new()
         .route("/:id", get(redirect))
