@@ -23,6 +23,11 @@ async fn shorten_url(
 
 #[shuttle_runtime::main]
 async fn main(#[shuttle_shared_db::Postgres] pool: PgPool) -> shuttle_axum::ShuttleAxum {
+    let _ = sqlx::migrate!("migrations/db")
+        .run(&pool)
+        .await
+        .unwrap();
+
     let router = Router::new()
         .route("/:id", get(redirect))
         .route("/", post(shorten_url))
